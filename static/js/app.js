@@ -6,6 +6,7 @@ function initialize() {
 // Use D3 fetch to read the JSON file    
     d3.json("samples.json").then((data) => {
         var names = data.names;
+        //this return a list of names = ['940', '941',....]
         //console.log(names);
 
         names.forEach((sample) => {
@@ -13,16 +14,49 @@ function initialize() {
                         .text(sample)
                         .property("value", sample);
         });
+        let firstsample = names[0]; //user pick 940
+        buildPanel(firstsample);
+
     }); 
 }
 initialize();
 
-function unpack(rows, index) {
-    return rows.map(function(row) {
-        return row[index];
-    });
-}; 
+function buildPanel(sample) {
+    var demo_panel = d3.select("#sample-metadata");
+    var data = d3.json("samples.json");
 
+    d3.json("samples.json").then((data) => {
+        //user pick sample - 940
+        //query data.metadata
+
+        //m = [ {id: '940', demographic: '....'},  {'id': '941', demographic: '....'},..]
+        var filteredID = data.metadata.filter(metadata => metadata.id == sample);
+        //console.log(filteredID);
+            demo_panel.append(sample) //filter based on id 940
+        //returning all the property
+        
+    })
+};
+
+/* function optionChanged(sample) {
+    //console.log("--->" + sample)
+    buildPanel(sample);
+    var panel = d3.select("#sample-metadata");
+    var DemoPanel = d3.select(".panel-body");
+    //var id_dropdown = d3.select("#selDataset");
+    d3.json("samples.json").then((data) => {
+    var filteredID = data.metadata.filter(metadata => metadata.id == sample);
+        filteredID.forEach(function(filteredID){
+        //console.log(filteredID);
+            var row = DemoPanel.append("sample");
+        
+            Object.entries(filteredID.forEach(function([key, value]){
+            console.log(key, value);
+            //Append a cell to the row for each value in the filteredID object
+            var cell = row.append(".panel-body");
+        }));
+    });
+})}; */
 /* d3.select("#selDataset").on("change", updateDemo);
                         function getID() {
 
@@ -78,33 +112,33 @@ function unpack(rows, index) {
                     });
                 });  */
 
-function updateDemo() {
+function optionChanged() {
     // select dropdown element
-    // Use D3 to select the Demographics panel
-    var data = d3.json("samples.json"); // not sure why data on line 94 was not defined but copying line from 2nd line in code
-    var DemoPanel = d3.select("panel-body");
-    var id_dropdown = d3.select("#selDataset");
-        //console.log(id_dropdown);
-    id_dropdown.on("change", function() {
-        // get the value property of the input
-        var value = id_dropdown.property("value");
-            //console.log(value);
-        // use filter function to sort data down by ID selected
-        var filteredID = data.filter(names => names.names === value);
-            //console.log(filteredID); 
-        filteredID.forEach(function(filteredID){
-            console.log(filteredID);
-            var row = DemoPanel.append("tr");
-            Object.entries(filteredID.forEach(function([key, value]){
-                console.log(key, value);
-                //Append a cell to the row for each value in the filteredID object
-                var cell = row.append("td");
-                cell.text(value);
+     // Use D3 to select the Demographics panel
+     var data = d3.json("samples.json"); // not sure why data on line 94 was not defined but copying line from 2nd line in code
+     var DemoPanel = d3.select(".panel-body");
+     var id_dropdown = d3.select("#selDataset");
+         //console.log(id_dropdown);
+     id_dropdown.on("change", function() {
+         // get the value property of the selected ID
+         var value = id_dropdown.property("value");
+         //    console.log(value);
+         // use filter function to sort data down by ID selected
+         var filteredID = data.filter(metadata => metadata.id === value);
+             //console.log(filteredID); 
+         filteredID.forEach(function(filteredID){
+             //console.log(filteredID);
+             var row = DemoPanel.append("tr");
+             Object.entries(filteredID.forEach(function([key, value]){
+                 //console.log(key, value);
+                 //Append a cell to the row for each value in the filteredID object
+                 var cell = row.append("td");
+                 cell.text(value);
             }));
-        }); 
-    });
-};
-
+         }); 
+     });
+ };
+optionChanged(); 
 /* function updatePlotly() {
     d3.json("samples.json").then(function(data) {
 
