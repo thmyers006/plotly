@@ -23,6 +23,7 @@ initialize();
 function optionChanged(newSample){ 
     buildPanel(newSample); 
     updatePlotly(newSample);
+    //bubblePlot(newSample);
 };
 
 function buildPanel(sample) {
@@ -44,51 +45,36 @@ function buildPanel(sample) {
     });
 };  
 
-        //m = [ {id: '940', demographic: '....'},  {'id': '941', demographic: '....'},..]
-        //var filteredID = data.metadata.filter(metadata => metadata.id == sample);
-        //console.log(filteredID);
-          //  trow = demo_panel.append(Object.entries(sample));
-            //    trow.append("td").text(data.metadata)
-                //trow.append("td").text(data.metadata,[1])
-                //trow.append("td").text(data.metadata,[2])
-                //trow.append("td").text(data.metadata,[3])
-                //trow.append("td").text(data.metadata,[4])
-                //trow.append("td").text(data.metadata,[5])
-                //trow.append("td").text(data.metadata,[6])
-               //                 .property("key", "value"); //filter based on id 940
-        //returning all the property
-        
-   // });
-//};
- 
 function updatePlotly(newSample) {
     //console.log(newSample);
+    //d3.json("/static/js/samples.json").then(data=>console.log(data));
     d3.json("samples.json").then(function(data) {
         var barSamples = data.samples;
         //console.log(barSamples);
         var barResults = barSamples.filter(sampleObject => sampleObject.id == newSample);
         //console.log(barResults);
         var barResult = barResults[0];
-        //console.log(barResult);
+        console.log(barResult);
         var slicedResult = barResult.sample_values.slice(0, 10);
         //console.log(slicedResult);
         var reversedResult = slicedResult.reverse()
-        console.log(reversedResult);
+        var reversed = reversedResult[0];
+        //console.log(reversed);
 
 
-
+           
        /*   x: reversed.map(object => object.greekSearchResults),
             y: reversed.map(object => object.greekName),
             text: reversed.map(object => object.greekName), */
 
         var trace = {
         x : reversedResult,
-        y : reversedResult.otu_ids,
+        y : barResults.otu_ids,
         labels : reversedResult.otu_labels,
         //x: reversedResult.map(sampleObject => sampleObject.barResults),
         //y: reversedResult.map(sampleObject => sampleObject.otu_ids),
         //labels : reversedResult.map(sampleObject => sampleObject.otu_ids),
-        text: reversedResult.otu_labels,
+        text: data.samples.otu_ids,
         type: "bar", 
         orientation : "h"
     }
@@ -106,3 +92,28 @@ function updatePlotly(newSample) {
    
 Plotly.newPlot("bar", data2, layout);
             })};
+
+
+/* function bubblePlot(newSample) {
+
+    d3.json("samples.json").then(function(data) {
+        var trace2 = {
+            x : reversedResult.otu_ids,
+            y: reversedResult,
+            mode: 'markers',
+            marker: {
+            size: reversedResult,
+            }
+        };
+        
+        var data3 = [trace1];
+        
+        var layout3 = {
+            title: 'Marker Size',
+            showlegend: false,
+            height: 600,
+            width: 600
+        };
+    });
+Plotly.newPlot('bubble', data3, layout3);
+}; */
