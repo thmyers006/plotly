@@ -51,30 +51,41 @@ function updatePlotly(newSample) {
     d3.json("samples.json").then(function(data) {
         var barSamples = data.samples;
         //console.log(barSamples);
+        //bar results in a list
         var barResults = barSamples.filter(sampleObject => sampleObject.id == newSample);
         //console.log(barResults);
+
+        //bar results outside of list - the actual object
         var barResult = barResults[0];
         console.log(barResult);
+
+        //bar samples
         var slicedResult = barResult.sample_values.slice(0, 10);
         //console.log(slicedResult);
         var reversedResult = slicedResult.reverse()
-        var reversed = reversedResult[0];
-        //console.log(reversed);
+        //console.log(reversedResult)
+        //var reversed = reversedResult[0];
+       
+        //bar labels
+        otu_labels = barResult.otu_labels.slice(0, 10)
+        //console.log(otu_labels)
 
-
+        //bar ids
+        otu_ids = barResult.otu_ids.slice(0, 10);
+        
            
        /*   x: reversed.map(object => object.greekSearchResults),
             y: reversed.map(object => object.greekName),
             text: reversed.map(object => object.greekName), */
 
         var trace = {
+        //y : otu_ids,
         x : reversedResult,
-        y : barResults.otu_ids,
-        labels : reversedResult.otu_labels,
+        labels : otu_ids,
         //x: reversedResult.map(sampleObject => sampleObject.barResults),
         //y: reversedResult.map(sampleObject => sampleObject.otu_ids),
         //labels : reversedResult.map(sampleObject => sampleObject.otu_ids),
-        text: data.samples.otu_ids,
+        text: otu_labels,
         type: "bar", 
         orientation : "h"
     }
