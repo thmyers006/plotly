@@ -61,6 +61,8 @@ function updatePlotly(newSample) {
 
         //bar samples
         var slicedResult = barResult.sample_values.slice(0, 10);
+        var slicedResult2 = barResult.otu_ids.slice(0, 10);
+        var slicedResult3 = barResult.otu_labels.slice(0, 10);
         //console.log(slicedResult);
         var reversedResult = slicedResult.reverse()
         //console.log(reversedResult)
@@ -72,23 +74,15 @@ function updatePlotly(newSample) {
 
         //bar ids
         otu_ids = barResult.otu_ids.slice(0, 10);
-        
-           
-       /*   x: reversed.map(object => object.greekSearchResults),
-            y: reversed.map(object => object.greekName),
-            text: reversed.map(object => object.greekName), */
-
+       
         var trace = {
-        //y : otu_ids,
-        x : reversedResult,
-        labels : otu_ids,
-        //x: reversedResult.map(sampleObject => sampleObject.barResults),
-        //y: reversedResult.map(sampleObject => sampleObject.otu_ids),
-        //labels : reversedResult.map(sampleObject => sampleObject.otu_ids),
-        text: otu_labels,
-        type: "bar", 
-        orientation : "h"
-    }
+            //y : otu_ids,
+            y : slicedResult2.map(otu_ids => `OTU ${otu_ids}`).reverse(),
+            x : slicedResult,
+            text: otu_labels,
+            type: "bar", 
+            orientation : "h"
+        }
 
     var data2 = [trace];
 
