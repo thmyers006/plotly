@@ -23,7 +23,7 @@ initialize();
 function optionChanged(newSample){ 
     buildPanel(newSample); 
     updatePlotly(newSample);
-    //bubblePlot(newSample);
+    bubblePlot();
 };
 
 function buildPanel(sample) {
@@ -76,7 +76,6 @@ function updatePlotly(newSample) {
         otu_ids = barResult.otu_ids.slice(0, 10);
        
         var trace = {
-            //y : otu_ids,
             y : slicedResult2.map(otu_ids => `OTU ${otu_ids}`).reverse(),
             x : slicedResult,
             text: otu_labels,
@@ -99,26 +98,43 @@ Plotly.newPlot("bar", data2, layout);
             })};
 
 
-/* function bubblePlot(newSample) {
+function bubblePlot() {
 
-    d3.json("samples.json").then(function(data) {
+        d3.json("samples.json").then(function(data) {
+
+            /* var svg = d3.select("#bubble").append("svg").attr("width", 1000).attr("height", 600);
+            var myColor = d3.scaleSequential().domain([1,10])
+                    .interpolator(d3.interpolateViridis);
+            svg.selectAll("#bubble").data(data)
+                                    .enter()
+                                    .append("circle")
+                                    .attr("cx", function(d,i){return 30 + i*60})
+                                    .attr("cy", 250).attr("r", 19)
+                                    .attr("fill", function(d){return myColor(d) });
+ */
+        var bubbles = data.samples;
+
         var trace2 = {
-            x : reversedResult.otu_ids,
-            y: reversedResult,
-            mode: 'markers',
-            marker: {
-            size: reversedResult,
-            }
-        };
-        
-        var data3 = [trace1];
+            x : bubbles.otu_ids,
+            y : bubbles.sample_values,
+            type : "circle",
+            mode : 'markers',
+            marker : {
+                size: bubbles.sample_values,
+                color: bubbles.otu_ids
+                },
+            text: bubbles.otu_labels
+                    }
+                       
+        var data3 = [trace2];
         
         var layout3 = {
-            title: 'Marker Size',
+            title: 'Bully Button Samples Bubble Chart',
             showlegend: false,
-            height: 600,
-            width: 600
-        };
-    });
+            //height: 600,
+            //width: 1000
+                    };
+    
+
 Plotly.newPlot('bubble', data3, layout3);
-}; */
+})};
