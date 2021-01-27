@@ -23,7 +23,7 @@ initialize();
 function optionChanged(newSample){ 
     buildPanel(newSample); 
     updatePlotly(newSample);
-    bubblePlot();
+    bubblePlot(newSample);
 };
 
 function buildPanel(sample) {
@@ -98,7 +98,7 @@ Plotly.newPlot("bar", data2, layout);
             })};
 
 
-function bubblePlot() {
+function bubblePlot(sample) {
 
         d3.json("samples.json").then(function(data) {
 
@@ -113,17 +113,20 @@ function bubblePlot() {
                                     .attr("fill", function(d){return myColor(d) });
  */
         var bubbles = data.samples;
+        var bubbleResultArray = bubbles.filter(sampleObject => sampleObject.id == sample);
+        var bubbleResult = bubbleResultArray[0];
+            console.log(bubbleResult);
 
         var trace2 = {
-            x : bubbles.otu_ids,
-            y : bubbles.sample_values,
-            type : "circle",
+            x : bubbleResult.otu_ids,
+            y : bubbleResult.sample_values,
+           //type : "circle",
             mode : 'markers',
             marker : {
-                size: bubbles.sample_values,
-                color: bubbles.otu_ids
+                size: bubbleResult.sample_values,
+                color: bubbleResult.otu_ids
                 },
-            text: bubbles.otu_labels
+            text: bubbleResult.otu_labels
                     }
                        
         var data3 = [trace2];
@@ -131,8 +134,7 @@ function bubblePlot() {
         var layout3 = {
             title: 'Bully Button Samples Bubble Chart',
             showlegend: false,
-            //height: 600,
-            //width: 1000
+            height: 800
                     };
     
 
