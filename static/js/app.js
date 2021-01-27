@@ -1,11 +1,11 @@
 // code to initalize the belly button biodiversity html page
 function initialize() {
     var d_selector = d3.select("#selDataset");
-    var data = d3.json("samples.json");
+    var data = d3.json("/static/js/samples.json");
     console.log(data);
 
 // Use D3 fetch to read the JSON file    
-    d3.json("samples.json").then((data) => {
+    d3.json("/static/js/samples.json").then((data) => {
         var names = data.names;
         //this return a list of names = ['940', '941',....]
         //console.log(names);
@@ -32,10 +32,10 @@ function optionChanged(newSample){
 // function to create demographics panel showing demographics of selected sample ID
 function buildPanel(sample) {
     var demo_panel = d3.select("#sample-metadata");
-    var data = d3.json("samples.json");
+    var data = d3.json("/static/js/samples.json");
     panel = [];
 
-    d3.json("samples.json").then((data) => {
+    d3.json("/static/js/samples.json").then((data) => {
         var metadata = data.metadata;
         //console.log(metadata);
         var results = metadata.filter(sampleObject => sampleObject.id == sample);
@@ -55,7 +55,7 @@ function updatePlotly(newSample) {
 
     //d3.json("/static/js/samples.json").then(data=>console.log(data));
     //code to create horizontal bar chart using data from selected sample ID
-    d3.json("samples.json").then(function(data) {
+    d3.json("/static/js/samples.json").then(function(data) {
         var barSamples = data.samples;
         //console.log(barSamples);
 
@@ -106,7 +106,7 @@ Plotly.newPlot("bar", data2, layout);
 function bubblePlot(sample) {
 
         // Use D3 fetch to read the JSON file 
-        d3.json("samples.json").then(function(data) {
+        d3.json("/static/js/samples.json").then(function(data) {
          
         // code to isolate selected sample ID data from the JSON file    
         var bubbles = data.samples;
