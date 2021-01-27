@@ -1,3 +1,4 @@
+// code to initalize the belly button biodiversity html page
 function initialize() {
     var d_selector = d3.select("#selDataset");
     var data = d3.json("samples.json");
@@ -20,12 +21,15 @@ function initialize() {
     }); 
 }
 initialize();
+
+//code to pass selected sample ID to all functions in the html webpage upon selection from dropdown window
 function optionChanged(newSample){ 
     buildPanel(newSample); 
     updatePlotly(newSample);
     bubblePlot(newSample);
 };
 
+// function to create demographics panel showing demographics of selected sample ID
 function buildPanel(sample) {
     var demo_panel = d3.select("#sample-metadata");
     var data = d3.json("samples.json");
@@ -37,7 +41,7 @@ function buildPanel(sample) {
         var results = metadata.filter(sampleObject => sampleObject.id == sample);
         //console.log(results);
         var result = results[0];
-        console.log(result);
+        //console.log(result);
         demo_panel.html(""); // clears out anything that's there inside of the panel
         Object.entries(result).forEach(([key, value]) => {
             demo_panel.append("h6").text(`${key}: ${value}`);
@@ -45,29 +49,29 @@ function buildPanel(sample) {
     });
 };  
 
+//function to create horizontal bar chart using data from samples.json for the selected sample ID
 function updatePlotly(newSample) {
     //console.log(newSample);
+
     //d3.json("/static/js/samples.json").then(data=>console.log(data));
+    //code to create horizontal bar chart using data from selected sample ID
     d3.json("samples.json").then(function(data) {
         var barSamples = data.samples;
         //console.log(barSamples);
+
         //bar results in a list
         var barResults = barSamples.filter(sampleObject => sampleObject.id == newSample);
         //console.log(barResults);
 
         //bar results outside of list - the actual object
         var barResult = barResults[0];
-        console.log(barResult);
+        //console.log(barResult);
 
-        //bar samples
+        //bar samples, otu_ids and otu_labels -- sliced to first 10 only
         var slicedResult = barResult.sample_values.slice(0, 10);
         var slicedResult2 = barResult.otu_ids.slice(0, 10);
         var slicedResult3 = barResult.otu_labels.slice(0, 10);
-        //console.log(slicedResult);
-        var reversedResult = slicedResult.reverse()
-        //console.log(reversedResult)
-        //var reversed = reversedResult[0];
-       
+               
         //bar labels
         otu_labels = barResult.otu_labels.slice(0, 10)
         //console.log(otu_labels)
@@ -77,50 +81,43 @@ function updatePlotly(newSample) {
        
         var trace = {
             y : slicedResult2.map(otu_ids => `OTU ${otu_ids}`).reverse(),
-            x : slicedResult,
+            x : slicedResult.reverse(),
             text: otu_labels,
             type: "bar", 
             orientation : "h"
         }
 
-    var data2 = [trace];
+        var data2 = [trace];
 
-    var layout = {
-        title : "OTU Bar Chart",
-        xaxis : {
-             autorange: true,
-        },
-        showlegend: false
+        var layout = {
+            title : "OTU Bar Chart",
+            xaxis : {
+                autorange: true,
+            },
+            showlegend: false
 
-                };        
-   
+                    };  
+
+// code to create horizontal bar chart using plot.ly   
 Plotly.newPlot("bar", data2, layout);
             })};
 
-
+// function to create bubble chart using data from selected sample ID 
 function bubblePlot(sample) {
 
+        // Use D3 fetch to read the JSON file 
         d3.json("samples.json").then(function(data) {
-
-            /* var svg = d3.select("#bubble").append("svg").attr("width", 1000).attr("height", 600);
-            var myColor = d3.scaleSequential().domain([1,10])
-                    .interpolator(d3.interpolateViridis);
-            svg.selectAll("#bubble").data(data)
-                                    .enter()
-                                    .append("circle")
-                                    .attr("cx", function(d,i){return 30 + i*60})
-                                    .attr("cy", 250).attr("r", 19)
-                                    .attr("fill", function(d){return myColor(d) });
- */
+         
+        // code to isolate selected sample ID data from the JSON file    
         var bubbles = data.samples;
         var bubbleResultArray = bubbles.filter(sampleObject => sampleObject.id == sample);
         var bubbleResult = bubbleResultArray[0];
             console.log(bubbleResult);
 
+        //code to designate the x and y axes for the bubble chart    
         var trace2 = {
             x : bubbleResult.otu_ids,
             y : bubbleResult.sample_values,
-           //type : "circle",
             mode : 'markers',
             marker : {
                 size: bubbleResult.sample_values,
@@ -131,12 +128,13 @@ function bubblePlot(sample) {
                        
         var data3 = [trace2];
         
+        // code to format the layout of the bubble chart
         var layout3 = {
             title: 'Bully Button Samples Bubble Chart',
             showlegend: false,
             height: 800
                     };
     
-
+// code to create bubble chart using selected sample from external JSON file
 Plotly.newPlot('bubble', data3, layout3);
 })};
