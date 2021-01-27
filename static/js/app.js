@@ -2,7 +2,8 @@
 function initialize() {
     var d_selector = d3.select("#selDataset");
     var data = d3.json("/static/js/samples.json");
-    console.log(data);
+    d3.json("/static/js/samples.json").then(data=>console.log(data));
+    //console.log(data);
 
 // Use D3 fetch to read the JSON file    
     d3.json("/static/js/samples.json").then((data) => {
